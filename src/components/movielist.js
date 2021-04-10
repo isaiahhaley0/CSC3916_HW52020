@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { fetchMovies } from '../actions/movieActions';
-import { setMovie } from '../actions/movieActions';
-import {connect} from "react-redux";
-import { Image } from 'react-bootstrap'
-import { Carousel } from 'react-bootstrap'
-import { Glyphicon } from 'react-bootstrap'
+import { fetchMovies } from "../actions/movieActions";
+import { setMovie } from "../actions/movieActions";
+import {connect} from 'react-redux';
+import {Image, Nav} from 'react-bootstrap';
+import { Carousel } from 'react-bootstrap';
+import { BsStarFill} from 'react-icons/bs'
 import {LinkContainer} from 'react-router-bootstrap';
 
 class MovieList extends Component {
@@ -30,7 +30,7 @@ class MovieList extends Component {
 
     render() {
         const MovieListCarousel = ({movieList}) => {
-            if (!movieList && movieList.size !==0) {
+            if (!movieList) {
                 return <div>Loading....</div>
             }
 
@@ -45,16 +45,17 @@ class MovieList extends Component {
                             </div>
                             <Carousel.Caption>
                                 <h3>{movie.title}</h3>
-                                <BsStarFill glyph={'star'} /> {movie.avg} &nbsp;&nbsp; {movie.year_Released}
+                                <BsStarFill glyph={'star'} /> {movie.avgRating} &nbsp;&nbsp; {movie.releaseDate}
                             </Carousel.Caption>
                         </Carousel.Item>
                     )}
+
                 </Carousel>
             )
         }
 
         return (
-            <MovieListCarousel movieList={this.props.movies}/>
+            <MovieListCarousel movieList={this.props.movies} />
         )
     }
 }
@@ -66,3 +67,4 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(MovieList);
+

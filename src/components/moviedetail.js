@@ -3,10 +3,54 @@ import { fetchMovie } from "../actions/movieActions";
 import {connect} from 'react-redux';
 import {Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { BsStarFill } from 'react-icons/bs'
-import { Image } from 'react-bootstrap';
+import {Form, FormGroup, FormControl, Image } from 'react-bootstrap';
+import runtimeEnv from '@mars/heroku-js-runtime-env'
 
 class MovieDetail extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { details: {
+                rating: '1',
+                name: localStorage.username,
+                title: props.selectedMovie.title,
+                quote: ''
+            }
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.updateDetails = this.updateDetails.bind(this);
+    }
+    updateDetails(event){
+        let updateDetails = Object.assign({}, this.state.details);
 
+        updateDetails[event.target.id] = event.target.value;
+        this.setState({
+            details: updateDetails
+        });
+    }
+    handleChange(event){
+        this.state.details.quote = event.target.value;
+    }
+    handleSubmit(event){
+        alert('Submitted');
+        const env = runtimeEnv();
+
+       fetch(`${env.REACT_APP_API_URL}/reviews`, {
+                method: 'POST',
+                headers: {
+
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                },
+                body: JSON.stringify(this.state.details),
+                mode: 'cors'
+            }).then(res => {
+           console.log("Request complete! response:", res);
+       });
+
+        event.preventDefault();
+
+    }
     componentDidMount() {
         const {dispatch} = this.props;
         if (this.props.selectedMovie == null) {
@@ -39,30 +83,21 @@ class MovieDetail extends Component {
                     <Card.Body>
                         {this.props.selectedMovie.reviews.map((review, i) =>
                             <p key={i}>
-                                <b>{review.username}</b>&nbsp; {review.review}
+                                <b>{review.name}</b>&nbsp; {review.quote}
                                 &nbsp;  <BsStarFill /> {review.rating}
                             </p>
                         )}
                     </Card.Body>
                     <Card.Body>
                         <div className="Review">
-                            <form onSubmit={this.handleSubmit}>
+                            <Form onSubmit={this.handleSubmit}>
+                                <textarea value={this.state.details.quote} id = 'quote'onChange={this.updateDetails} />
 
-                                <input placeholder={'Review'}
-                                       type='text'
+                                <input placeholder={'rating'}
+                                       type='number' id = 'rating' value={this.state.details.rating} onChange={this.updateDetails}
                                 />
-                                <label>
-                                    Rating:
-                                    <select value={this.state.value} onChange={this.handleChange}>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                </label>
                                 <button type='submit'>Submit Review</button>
-                            </form>
+                            </Form>
                         </div>
                     </Card.Body>
                 </Card>

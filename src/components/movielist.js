@@ -8,6 +8,7 @@ import { BsStarFill} from 'react-icons/bs'
 import {LinkContainer} from 'react-router-bootstrap';
 
 class MovieList extends Component {
+
     constructor(props) {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
@@ -15,6 +16,9 @@ class MovieList extends Component {
 
     componentDidMount() {
         const {dispatch} = this.props;
+        setTimeout(() => {
+            this.setState({ loading: false });
+        }, 10);
         dispatch(fetchMovies());
     }
 
@@ -45,17 +49,16 @@ class MovieList extends Component {
                             </div>
                             <Carousel.Caption>
                                 <h3>{movie.title}</h3>
-                                <BsStarFill glyph={'star'} /> {movie.avgRating} &nbsp;&nbsp; {movie.releaseDate}
+                                <BsStarFill glyph={'star'} /> {movie.avgRating} &nbsp;&nbsp; {movie.year}
                             </Carousel.Caption>
                         </Carousel.Item>
                     )}
-
                 </Carousel>
             )
         }
 
         return (
-            <MovieListCarousel movieList={this.props.movies} />
+            <MovieListCarousel movieList={this.props.movies}/>
         )
     }
 }
@@ -67,4 +70,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(MovieList);
-

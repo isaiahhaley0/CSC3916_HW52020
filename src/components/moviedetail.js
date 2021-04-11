@@ -44,6 +44,27 @@ class MovieDetail extends Component {
                             </p>
                         )}
                     </Card.Body>
+                    <Card.Body>
+                        <div className="Review">
+                            <form onSubmit={this.handleSubmit}>
+
+                                <input placeholder={'Review'}
+                                       type='text'
+                                />
+                                <label>
+                                    Rating:
+                                    <select value={this.state.value} onChange={this.handleChange}>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </label>
+                                <button type='submit'>Submit Review</button>
+                            </form>
+                        </div>
+                    </Card.Body>
                 </Card>
             )
         }
